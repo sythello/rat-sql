@@ -1,4 +1,4 @@
-FROM python:3.7-slim
+FROM pytorch/pytorch:1.5-cuda10.1-cudnn7-devel
 
 ENV LC_ALL=C.UTF-8 \
     LANG=C.UTF-8
@@ -17,7 +17,7 @@ RUN mkdir -p /usr/share/man/man1 && \
 # Install app requirements first to avoid invalidating the cache
 COPY requirements.txt setup.py /app/
 WORKDIR /app
-RUN pip install --user -r requirements.txt && \
+RUN pip install --user -r requirements.txt --no-warn-script-location && \
     pip install --user entmax && \
     python -c "import nltk; nltk.download('stopwords'); nltk.download('punkt')"
 
@@ -42,6 +42,9 @@ RUN mkdir -p /mnt/data && \
     ln -snf /mnt/data/wikisql wikisql
 
 # Convert all shell scripts to Unix line endings, if any
-RUN /bin/bash -c 'if compgen -G "/app/**/*.sh" > /dev/null; then dos2unix /app/**/*.sh; fi' 
+RUN /bin/bash -c 'if compgen -G "/app/**/*.sh" > /dev/null; then dos2unix /app/**/*.sh; fi'
+
+# Extend PYTHONPATH to load WikiSQL dependencies
+ENV PYTHONPATH="/app/third_party/wikisql/:${PYTHONPATH}" 
 
 ENTRYPOINT bash
