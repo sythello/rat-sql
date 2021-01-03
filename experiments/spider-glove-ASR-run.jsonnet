@@ -1,5 +1,5 @@
 {
-    logdir: "logdir/glove_run",
+    logdir: "logdir/glove_ASR_run",
     model_config: "configs/spider/nl2code-glove-ASR.jsonnet",
     model_config_args: {
         att: 0,
@@ -8,7 +8,7 @@
         enumerate_order: false,
     },
 
-    eval_name: "glove_run_%s_%d" % [self.eval_use_heuristic, self.eval_beam_size],
+    eval_name: "glove_ASR_run_%s_%d" % [self.eval_use_heuristic, self.eval_beam_size],
     eval_output: "__LOGDIR__/ie_dirs",
     eval_beam_size: 1,
     eval_use_heuristic: true,
