@@ -134,4 +134,7 @@ att_dirs/
 # yshao
 third_party/
 save_logdir/
+data/
+output/
+
 
