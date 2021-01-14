@@ -31,6 +31,9 @@ def main(args):
     else:
         print(metrics)
 
+    ## @YS
+    args.output = output_path
+
 
 if __name__ == '__main__':
     args = add_parser()

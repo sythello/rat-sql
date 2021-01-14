@@ -9,7 +9,7 @@ function(args, data_path=_data_path) _base(output_from=true, data_path=data_path
 
     local lr_s = '%0.1e' % lr,
     local end_lr_s = '0e0',
-    model_name: 'ASR,bs=%(bs)d,lr=%(lr)s,end_lr=%(end_lr)s,att=%(att)d' % ({
+    model_name: 'mixed,bs=%(bs)d,lr=%(lr)s,end_lr=%(end_lr)s,att=%(att)d' % ({
         bs: bs,
         lr: lr_s,
         end_lr: end_lr_s,
@@ -21,6 +21,8 @@ function(args, data_path=_data_path) _base(output_from=true, data_path=data_path
             # name: 'spider', 
             paths: [
               _data_path + 'my/train/train_asr_amazon.json',
+              _data_path + 'train_spider.json',
+              _data_path + 'train_others.json',
             ],
             tables_paths: [
               _data_path + 'tables.json',
@@ -29,7 +31,10 @@ function(args, data_path=_data_path) _base(output_from=true, data_path=data_path
         },
         val+: {
             # name: 'spider', 
-            paths: [_data_path + 'my/dev/dev_asr_amazon.json'],
+            paths: [
+                _data_path + 'my/dev/dev_asr_amazon.json',
+                _data_path + 'dev.json',
+            ],
             tables_paths: [_data_path + 'tables.json'],
             db_path: _data_path + 'database',
         },
@@ -63,7 +68,7 @@ function(args, data_path=_data_path) _base(output_from=true, data_path=data_path
             compute_cv_link: args.cv_link,
             fix_issue_16_primary_keys: true,
             count_tokens_in_word_emb_for_vocab: true,
-            save_path: _data_path + 'nl2code-glove-ASR,cv_link=%s' % args.cv_link,
+            save_path: _data_path + 'nl2code-glove-mixed,cv_link=%s' % args.cv_link,
         },
         decoder_preproc+: {
             grammar+: {
@@ -72,7 +77,7 @@ function(args, data_path=_data_path) _base(output_from=true, data_path=data_path
                 clause_order: args.clause_order,
                 factorize_sketch: 2,
             },
-            save_path: _data_path + 'nl2code-glove-ASR,cv_link=%s' % args.cv_link,
+            save_path: _data_path + 'nl2code-glove-mixed,cv_link=%s' % args.cv_link,
 
             compute_sc_link :: null,
             compute_cv_link :: null,

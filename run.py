@@ -101,6 +101,9 @@ def main():
             )
             eval.main(eval_config)
 
+            ## @YS
+            eval_output_path = eval_config.output
+            
             res_json = json.load(open(eval_output_path))
             print(step, res_json['total_scores']['all']['exact'])
 
