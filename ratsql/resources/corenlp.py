@@ -7,6 +7,9 @@ import requests
 
 class CoreNLP:
     def __init__(self):
+        ## YS: debug
+        # raise ValueError
+
         if not os.environ.get('CORENLP_HOME'):
             os.environ['CORENLP_HOME'] = os.path.abspath(
                 os.path.join(

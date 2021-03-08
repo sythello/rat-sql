@@ -614,6 +614,8 @@ class NL2CodeDecoder(torch.nn.Module):
                             else:
                                 traversal.step(values[0], values[1:], node + len(enc_input['columns']))
                     else:
+                        ## YS
+                        # print(values)
                         traversal.step(values[0], values[1:])
                 else:
                     traversal.step(node)

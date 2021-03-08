@@ -283,6 +283,10 @@ class BiLSTM(torch.nn.Module):
                 lambda _: output.data[torch.LongTensor(rev_remapped_ps_indices)])
             new_boundaries = boundaries
 
+        ## YS
+        print(f'BiLSTM{"-summ" if self.summarize else ""}:')
+        print(boundaries)
+        print(new_boundaries)
         return new_all_embs, new_boundaries
 
 
