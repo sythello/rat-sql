@@ -284,9 +284,9 @@ class BiLSTM(torch.nn.Module):
             new_boundaries = boundaries
 
         ## YS
-        print(f'BiLSTM{"-summ" if self.summarize else ""}:')
-        print(boundaries)
-        print(new_boundaries)
+        # print(f'BiLSTM{"-summ" if self.summarize else ""}:')
+        # print(boundaries)
+        # print(new_boundaries)
         return new_all_embs, new_boundaries
 
 
