@@ -136,5 +136,5 @@ third_party/
 save_logdir/
 data/
 output/
-
-
+.vector_cache
+logdir

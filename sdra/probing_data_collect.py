@@ -46,26 +46,45 @@ from language.xsp.data_preprocessing import spider_preprocessing, wikisql_prepro
 from sdr_analysis.helpers.general_helpers import _random_select_indices
 
 from sdra import probing_data_utils as pb_utils
+from sdra.link_prediction_collectors import LinkPredictionDataCollector_ratsql_spider, LinkPredictionDataCollector_ratsql_wikisql
+from sdra.single_node_reconstruction_collectors import SingleNodeReconstructionDataCollector_ratsql_spider, SingleNodeReconstructionDataCollector_ratsql_wikisql
+
+
+
+DATA_COLLECTOR_CLS_DICT = {
+    "spider": {
+        "link_prediction": LinkPredictionDataCollector_ratsql_spider,
+        "single_node_reconstruction": SingleNodeReconstructionDataCollector_ratsql_spider,
+    },
+    "wikisql": {
+        "link_prediction": LinkPredictionDataCollector_ratsql_wikisql,
+        "single_node_reconstruction": SingleNodeReconstructionDataCollector_ratsql_wikisql,
+    },
+}
 
 
 def main(args):
-    if args.dataset == 'spider':
-        probe_data_collector_cls = pb_utils.LinkPredictionDataCollector_ratsql_spider
-    elif args.dataset == 'wikisql':
-        probe_data_collector_cls = pb_utils.LinkPredictionDataCollector_ratsql_wikisql
-    else:
-        raise ValueError(args.dataset)
+    # if args.dataset == 'spider':
+    #     probe_data_collector_cls = pb_utils.LinkPredictionDataCollector_ratsql_spider
+    # elif args.dataset == 'wikisql':
+    #     probe_data_collector_cls = pb_utils.LinkPredictionDataCollector_ratsql_wikisql
+    # else:
+    #     raise ValueError(args.dataset)
+    probe_data_collector_cls = DATA_COLLECTOR_CLS_DICT[args.dataset][args.probe_task]
     
     probe_data_collector  = probe_data_collector_cls(
         orig_dataset_dir=args.orig_dataset_dir,
         graph_dataset_dir=args.graph_dataset_dir,
         probing_data_in_dir=args.probing_data_in_dir,
         probing_data_out_dir=args.probing_data_out_dir,
-        max_rel_occ=args.max_rel_occ,
+        max_label_occ=args.max_label_occ,
         ds_size=args.ds_size,
+        enc_batch_size=args.enc_batch_size,
+        device_name='cpu',
     )
 
     # probe_data_collector._start_idx = 495
+    # probe_data_collector._end_idx = 5
 
     probe_data_collector.load_model(args)
 
@@ -84,6 +103,8 @@ if __name__ == '__main__':
     # general args
     parser.add_argument('-ds', '--dataset', type=str, required=True,
         help="Which dataset; now support 'spider' and 'wikisql'.")
+    parser.add_argument('-probe_task', '--probe_task', type=str, required=True,
+        help="Which probing task.")
     # parser.add_argument('-tables_path', '--tables_path', type=str, required=True,
     #     help="Input spider tables file (tables.json)")
     # parser.add_argument('-db_path', '--db_path', type=str, required=True,
@@ -94,12 +115,14 @@ if __name__ == '__main__':
         help="Dir with graph-preprocessed input dataset files (e.g. .../SDR-analysis/data/{dataset})")
     parser.add_argument('-pb_in_dir', '--probing_data_in_dir', type=str, required=False,
         help="The directory with input probing data files (to load pos file from)")
-    parser.add_argument('-sz', '--ds_size', type=int, required=False, default=500,
-        help="Only used when no 'pb_in_dir' given. Use X samples from original dataset to collect probing samples.")
-    parser.add_argument('-mo', '--max_rel_occ', type=int, required=False, default=1,
-        help="Only used when no 'pb_in_dir' given. For each spider sample, include at most X probing samples per relation type.")
     parser.add_argument('-pb_out_dir', '--probing_data_out_dir', type=str, required=True,
         help="The directory to have output probing data files (for uskg)")
+    parser.add_argument('-enc_bsz', '--enc_batch_size', type=int, required=False, default=1,
+        help="Batch size when computing the encodings.")
+    parser.add_argument('-ds_size', '--ds_size', type=int, required=False, default=None,
+        help="Only used when no 'pb_in_dir' given. Use X samples from original dataset to collect probing samples.")
+    parser.add_argument('-max_label_occ', '--max_label_occ', type=int, required=False, default=None,
+        help="Only used when no 'pb_in_dir' given. For each spider sample, include at most X probing samples per relation type.")
 
     args = parser.parse_args()
 
