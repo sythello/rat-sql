@@ -1,5 +1,5 @@
 PROJ_DIR='/home/yshao/Projects'
-DATASET='wikisql'
+DATASET='spider'
 
 python -m sdra.get_rat_sql_graph \
 -ds ${DATASET} \

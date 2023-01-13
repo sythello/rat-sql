@@ -83,8 +83,10 @@ def main(args):
         device_name='cpu',
     )
 
-    # probe_data_collector._start_idx = 495
-    # probe_data_collector._end_idx = 5
+    probe_data_collector.orig_ds_list = ['train_others']
+    # probe_data_collector.prob_ds_list = ['test']
+    # probe_data_collector._start_idx = 12
+    # probe_data_collector._end_idx = 30
 
     probe_data_collector.load_model(args)
 

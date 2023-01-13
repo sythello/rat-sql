@@ -46,6 +46,7 @@ from language.xsp.data_preprocessing import spider_preprocessing, wikisql_prepro
 from sdr_analysis.helpers.general_helpers import _random_select_indices
 
 from sdra import probing_data_utils as pb_utils
+from sdra.link_prediction_collectors import LinkPredictionDataCollector_ratsql_spider, LinkPredictionDataCollector_ratsql_wikisql
 
 
 
@@ -59,17 +60,18 @@ def main(args):
     model = rat_sql_model_dict['model']
 
     if args.dataset == 'spider':
-        data_collector = pb_utils.LinkPredictionDataCollector_ratsql_spider()
+        data_collector = LinkPredictionDataCollector_ratsql_spider()
         paths_dict = {
             orig_ds : {
                 'orig_dataset_path': os.path.join(args.input_dir, f'{orig_ds}.json'),
                 'orig_tables_path': os.path.join(args.input_dir, 'tables.json'),
                 'db_path': os.path.join(args.input_dir, 'database'),    # For spider, db_path is database root dir
             }
-            for orig_ds in ['train', 'dev']
+            # for orig_ds in ['train', 'train_others', 'dev']
+            for orig_ds in ['train_others']
         }
     elif args.dataset == 'wikisql':
-        data_collector = pb_utils.LinkPredictionDataCollector_ratsql_wikisql()
+        data_collector = LinkPredictionDataCollector_ratsql_wikisql()
         paths_dict = {
             orig_ds : {
                 'orig_dataset_path': os.path.join(args.input_dir, f'{orig_ds}.jsonl'),
@@ -117,7 +119,7 @@ def main(args):
                 'q_nodes_orig': q_nodes_orig,
                 'relations': relations
             }
-            time.sleep(0.2)
+            time.sleep(0.1)
 
         with open(output_dataset_path, 'w') as f:
             json.dump(orig_dataset, f, indent=2)
